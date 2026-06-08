@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ShoppingCart, Search, Utensils, Coffee, CreditCard, Banknote, Plus, Minus, Trash2 } from 'lucide-react';
+import { ShoppingCart, Search, Utensils, Coffee, CreditCard, Banknote, Plus, Minus, Trash2, CheckCircle2, Loader2, X } from 'lucide-react';
 
 // Mock data for initial UI
 const categories = [
@@ -22,6 +22,10 @@ const products = [
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState('1');
   const [cart, setCart] = useState<{ id: string; name: string; price: number; quantity: number }[]>([]);
+  
+  // Payment states
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [receiptData, setReceiptData] = useState<any>(null);
 
   const addToCart = (product: any) => {
     setCart((prev) => {
@@ -51,9 +55,91 @@ export default function Home() {
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  return (
-    <div className="flex h-screen w-full bg-[#0f172a] text-slate-100 overflow-hidden font-sans">
+  const handlePayment = async (method: 'cash' | 'card') => {
+    if (cart.length === 0) return;
+    
+    setIsProcessing(true);
+    
+    try {
+      const res = await fetch('/api/fiskaly/transaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ total, items: cart, method })
+      });
       
+      const result = await res.json();
+      
+      if (result.success) {
+        setReceiptData({
+          items: [...cart],
+          total,
+          method,
+          tseData: result.data
+        });
+        setCart([]); // Clear cart
+      }
+    } catch (error) {
+      console.error('Payment failed', error);
+      alert('Ödeme işleminde bir hata oluştu!');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div className="flex h-screen w-full bg-[#0f172a] text-slate-100 overflow-hidden font-sans relative">
+      
+      {/* Receipt Modal */}
+      {receiptData && (
+        <div className="absolute inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-50 w-full max-w-sm rounded-xl shadow-2xl p-6 text-slate-900 flex flex-col relative animate-in fade-in zoom-in duration-300">
+            <button 
+              onClick={() => setReceiptData(null)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+            >
+              <X size={24} />
+            </button>
+            
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 size={32} />
+              </div>
+              <h2 className="text-2xl font-bold">Ödeme Alındı</h2>
+              <p className="text-sm text-slate-500">KasseSync Test Restaurant</p>
+            </div>
+            
+            <div className="border-t border-dashed border-slate-300 py-4 mb-4">
+              {receiptData.items.map((item: any, idx: number) => (
+                <div key={idx} className="flex justify-between text-sm mb-2">
+                  <span>{item.quantity}x {item.name}</span>
+                  <span className="font-medium">€{(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+            
+            <div className="flex justify-between text-xl font-bold mb-6">
+              <span>TOPLAM</span>
+              <span>€{receiptData.total.toFixed(2)}</span>
+            </div>
+            
+            {/* TSE Section (KassenSichV compliance proof) */}
+            <div className="bg-slate-100 p-3 rounded-lg text-[10px] text-slate-500 font-mono break-all leading-tight border border-slate-200">
+              <p className="font-bold text-slate-700 mb-1">TSE İMZA VERİSİ (MOCK)</p>
+              <p>TX: {receiptData.tseData.fiskaly_transaction_id}</p>
+              <p>Start: {new Date(receiptData.tseData.tse_start_time).toLocaleString()}</p>
+              <p className="mt-1">Sign: {receiptData.tseData.fiskaly_signature}</p>
+            </div>
+            
+            <button 
+              onClick={() => setReceiptData(null)}
+              className="mt-6 w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-slate-800 transition-colors"
+            >
+              Yeni Sipariş
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Left Area: Categories & Products */}
       <div className="flex-1 flex flex-col p-6">
         
@@ -118,7 +204,16 @@ export default function Home() {
       </div>
 
       {/* Right Area: Cart / Ticket */}
-      <div className="w-[400px] glass-panel border-l border-slate-700/50 flex flex-col z-10 shadow-2xl">
+      <div className="w-[400px] glass-panel border-l border-slate-700/50 flex flex-col z-10 shadow-2xl relative">
+        {/* Loading Overlay for Payment */}
+        {isProcessing && (
+          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center rounded-l-2xl">
+            <Loader2 size={48} className="text-emerald-500 animate-spin mb-4" />
+            <h3 className="text-xl font-bold text-white">Ödeme Alınıyor...</h3>
+            <p className="text-slate-400 text-sm mt-2">TSE İmzasI Bekleniyor (Fiskaly)</p>
+          </div>
+        )}
+
         <div className="p-6 border-b border-slate-700/50 bg-slate-800/40">
           <h2 className="text-xl font-bold flex items-center gap-2">
             <ShoppingCart className="text-blue-400" /> 
@@ -178,20 +273,24 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <button className="flex flex-col items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 text-white p-4 rounded-2xl premium-transition active:scale-95 shadow-lg">
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <button 
+              onClick={() => handlePayment('cash')}
+              disabled={cart.length === 0 || isProcessing}
+              className="flex flex-col items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-white p-4 rounded-2xl premium-transition active:scale-95 shadow-lg"
+            >
               <Banknote size={24} />
               <span className="font-medium">Nakit</span>
             </button>
-            <button className="flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white p-4 rounded-2xl premium-transition active:scale-95 shadow-lg shadow-blue-500/25">
+            <button 
+              onClick={() => handlePayment('card')}
+              disabled={cart.length === 0 || isProcessing}
+              className="flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white p-4 rounded-2xl premium-transition active:scale-95 shadow-lg shadow-blue-500/25"
+            >
               <CreditCard size={24} />
               <span className="font-medium">Kart</span>
             </button>
           </div>
-          
-          <button className="w-full mt-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-2xl premium-transition active:scale-95 shadow-lg shadow-emerald-500/25 uppercase tracking-wide">
-            Öde ve Fiş Yazdır
-          </button>
         </div>
       </div>
     </div>
