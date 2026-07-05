@@ -17,7 +17,17 @@ import {
   Star,
   Store,
   ChevronDown,
-  Bike
+  Bike,
+  Menu,
+  X,
+  User,
+  List,
+  Award,
+  HelpCircle,
+  Gift,
+  Sun,
+  Globe,
+  LogIn
 } from 'lucide-react';
 import { ReservationSection } from '@/components/landing/ReservationSection';
 import { CategoriesSection } from '@/components/landing/CategoriesSection';
@@ -32,6 +42,7 @@ export default function GastroSyncLandingPage() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isPartnerDropdownOpen, setIsPartnerDropdownOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,46 +64,162 @@ export default function GastroSyncLandingPage() {
       <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-[#FFE5D9] rounded-full mix-blend-overlay filter blur-[100px] opacity-60 pointer-events-none -translate-x-1/2 -translate-y-1/2"></div>
       <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-[#FF9A9E] rounded-full mix-blend-overlay filter blur-[100px] opacity-60 pointer-events-none translate-x-1/3 translate-y-1/3"></div>
 
-      {/* Full-width Header pushed to edges and top */}
-      <header className="w-full px-6 sm:px-10 lg:px-16 pt-2 pb-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-50">
+      {/* Header */}
+      <header className="w-full px-4 sm:px-10 lg:px-16 py-3 flex items-center justify-between gap-4 relative z-50 bg-transparent">
         <Link href="/" className="block">
           <Image 
             src="/logo.png" 
             alt="GastroSync Logo" 
-            width={400} 
-            height={130} 
-            className="object-contain drop-shadow-md h-auto w-auto max-h-32 scale-110 origin-left"
+            width={240} 
+            height={78} 
+            className="object-contain drop-shadow-md h-12 w-auto"
             priority
           />
         </Link>
         <div className="flex items-center gap-3">
-          <Link href="/login" className="px-6 py-2.5 rounded-full bg-white/20 hover:bg-white/30 text-white font-bold backdrop-blur-md border border-white/30 transition-all text-sm shadow-sm">
-            İşletme Girişi
-          </Link>
-          <div className="relative">
-            <button 
-              onClick={() => setIsPartnerDropdownOpen(!isPartnerDropdownOpen)}
-              onBlur={() => setTimeout(() => setIsPartnerDropdownOpen(false), 200)}
-              className="px-6 py-2.5 rounded-full bg-teal-600 hover:bg-teal-700 text-white font-bold transition-all text-sm shadow-lg shadow-teal-600/30 flex items-center gap-1.5 focus:outline-none"
-            >
-              Partner Ol <ChevronDown size={14} className={`transition-transform duration-200 ${isPartnerDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {isPartnerDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-150 overflow-hidden z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
-                <Link href="/partner-apply" className="flex items-center gap-2.5 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 font-bold transition-colors">
-                  <Store size={16} className="text-teal-600 shrink-0" />
-                  Restoran Başvurusu
-                </Link>
-                <div className="h-[1px] bg-slate-100 mx-2"></div>
-                <Link href="/courier-apply" className="flex items-center gap-2.5 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 font-bold transition-colors">
-                  <Bike size={16} className="text-teal-600 shrink-0" />
-                  Kurye Başvurusu
-                </Link>
-              </div>
-            )}
+          {/* Desktop links */}
+          <div className="hidden md:flex items-center gap-3">
+            <Link href="/login" className="px-5 py-2 rounded-full bg-white/20 hover:bg-white/30 text-white font-bold backdrop-blur-md border border-white/30 transition-all text-xs shadow-sm">
+              İşletme Girişi
+            </Link>
+            <div className="relative">
+              <button 
+                onClick={() => setIsPartnerDropdownOpen(!isPartnerDropdownOpen)}
+                onBlur={() => setTimeout(() => setIsPartnerDropdownOpen(false), 200)}
+                className="px-5 py-2 rounded-full bg-teal-600 hover:bg-teal-700 text-white font-bold transition-all text-xs shadow-lg shadow-teal-600/30 flex items-center gap-1.5 focus:outline-none"
+              >
+                Partner Ol <ChevronDown size={12} className={`transition-transform duration-200 ${isPartnerDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isPartnerDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-150 overflow-hidden z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <Link href="/partner-apply" className="flex items-center gap-2.5 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 font-bold transition-colors">
+                    <Store size={16} className="text-teal-600 shrink-0" />
+                    Restoran Başvurusu
+                  </Link>
+                  <div className="h-[1px] bg-slate-100 mx-2"></div>
+                  <Link href="/courier-apply" className="flex items-center gap-2.5 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 font-bold transition-colors">
+                    <Bike size={16} className="text-teal-600 shrink-0" />
+                    Kurye Başvurusu
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
+          
+          {/* User Profile / Hamburger trigger */}
+          <button 
+            onClick={() => setIsDrawerOpen(true)}
+            className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-md border border-white/30 transition-all shadow-sm group font-bold text-xs"
+          >
+            <Menu className="w-4 h-4 text-white" />
+            <User className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+          </button>
         </div>
       </header>
+
+      {/* Sliding Mobile Drawer */}
+      {isDrawerOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          {/* Backdrop overlay */}
+          <div 
+            onClick={() => setIsDrawerOpen(false)}
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+          />
+          
+          {/* Drawer content panel */}
+          <div className="relative w-[320px] max-w-[85vw] bg-white h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-300">
+            {/* Header */}
+            <div className="flex items-center justify-between p-5 border-b border-gray-150">
+              <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <User className="w-5 h-5 text-rose-500" />
+                Hesabım
+              </h2>
+              <button 
+                onClick={() => setIsDrawerOpen(false)}
+                className="p-1 rounded-full hover:bg-slate-100 text-slate-500 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            {/* Scrollable list content */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-6 scrollbar-hide">
+              {/* Promo Card (Lieferando-style) */}
+              <div className="bg-gradient-to-br from-indigo-50 to-rose-50 border border-indigo-100/50 rounded-2xl p-5 shadow-sm">
+                <h3 className="font-bold text-slate-800 text-sm mb-2">Daha fazla avantaj için giriş yapın ✨</h3>
+                <ul className="text-xs text-slate-600 space-y-1.5 mb-4 list-disc list-inside">
+                  <li>Özel teklifler ve indirimler</li>
+                  <li>Hızlı ve kolay sipariş adımları</li>
+                  <li>Anlık sipariş takibi</li>
+                </ul>
+                <Link 
+                  href="/login"
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="block w-full py-3 text-center text-xs font-bold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition-colors shadow-md shadow-rose-500/25"
+                >
+                  Giriş Yap veya Üye Ol
+                </Link>
+              </div>
+
+              {/* Navigation list */}
+              <div className="space-y-1">
+                <Link href="/login" onClick={() => setIsDrawerOpen(false)} className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 hover:bg-slate-50 font-semibold text-sm transition-colors group">
+                  <List className="w-4 h-4 text-slate-400 group-hover:text-rose-500" />
+                  <span>Siparişlerim</span>
+                </Link>
+                <Link href="/marketplace" onClick={() => setIsDrawerOpen(false)} className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 hover:bg-slate-50 font-semibold text-sm transition-colors group">
+                  <Award className="w-4 h-4 text-slate-400 group-hover:text-rose-500" />
+                  <span>Avantajlar & Kampanyalar</span>
+                </Link>
+                <Link href="/marketplace" onClick={() => setIsDrawerOpen(false)} className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 hover:bg-slate-50 font-semibold text-sm transition-colors group">
+                  <Percent className="w-4 h-4 text-slate-400 group-hover:text-rose-500" />
+                  <span>Kuponlarım</span>
+                </Link>
+                <Link href="/marketplace" onClick={() => setIsDrawerOpen(false)} className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 hover:bg-slate-50 font-semibold text-sm transition-colors group">
+                  <HelpCircle className="w-4 h-4 text-slate-400 group-hover:text-rose-500" />
+                  <span>Yardım Alın</span>
+                </Link>
+                <Link href="/marketplace" onClick={() => setIsDrawerOpen(false)} className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 hover:bg-slate-50 font-semibold text-sm transition-colors group">
+                  <Gift className="w-4 h-4 text-slate-400 group-hover:text-rose-500" />
+                  <span>Hediye Kartı</span>
+                </Link>
+                
+                <div className="h-[1px] bg-slate-100 my-4 mx-2"></div>
+                
+                <div className="flex items-center justify-between px-3 py-3 text-slate-700 text-sm font-semibold">
+                  <div className="flex items-center gap-3">
+                    <Sun className="w-4 h-4 text-slate-400" />
+                    <span>Tema Modu</span>
+                  </div>
+                  <span className="text-xs text-slate-400">Sistem</span>
+                </div>
+                <div className="flex items-center justify-between px-3 py-3 text-slate-700 text-sm font-semibold">
+                  <div className="flex items-center gap-3">
+                    <Globe className="w-4 h-4 text-slate-400" />
+                    <span>Dil</span>
+                  </div>
+                  <span className="text-xs text-slate-400">Türkçe (TR)</span>
+                </div>
+                
+                <div className="h-[1px] bg-slate-100 my-4 mx-2"></div>
+                
+                <Link href="/partner-apply" onClick={() => setIsDrawerOpen(false)} className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 hover:bg-slate-50 font-semibold text-sm transition-colors group">
+                  <Store className="w-4 h-4 text-slate-400 group-hover:text-rose-500" />
+                  <span>Restoran Ortağımız Olun</span>
+                </Link>
+                <Link href="/courier-apply" onClick={() => setIsDrawerOpen(false)} className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 hover:bg-slate-50 font-semibold text-sm transition-colors group">
+                  <Bike className="w-4 h-4 text-slate-400 group-hover:text-rose-500" />
+                  <span>Kuryemiz Olun</span>
+                </Link>
+                <Link href="/login" onClick={() => setIsDrawerOpen(false)} className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 hover:bg-slate-50 font-semibold text-sm transition-colors group">
+                  <LogIn className="w-4 h-4 text-slate-400 group-hover:text-rose-500" />
+                  <span>İşletme Girişi</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Container */}
       <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 relative z-40 flex flex-col">
@@ -104,32 +231,48 @@ export default function GastroSyncLandingPage() {
           </h1>
 
           {/* Search Bar */}
-          <form onSubmit={handleSearch} className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-4 bg-white/30 p-3 rounded-[2.5rem] backdrop-blur-lg border border-white/50 shadow-xl">
-            <div className="flex-1 flex items-center bg-white rounded-full px-6 py-4 w-full shadow-inner">
-              <MapPin className="w-5 h-5 text-gray-400 mr-3" />
-              <input 
-                type="text" 
-                placeholder="Lokasyonunuz..." 
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="bg-transparent border-none outline-none w-2/5 text-gray-700 placeholder-gray-400 font-medium"
-              />
-              <div className="w-[1px] h-8 bg-gray-200 mx-4"></div>
-              <input 
-                type="text" 
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  if (e.target.value === '') setSearchResults([]); // clear results if empty
-                }}
-                placeholder="Yemek arayın... (Örn: Adana Kebap)" 
-                className="bg-transparent border-none outline-none flex-1 text-gray-700 placeholder-gray-400 font-medium"
-              />
-              <button type="submit" disabled={isSearching} className="ml-2 bg-rose-500 hover:bg-rose-600 text-white p-2 rounded-full transition-colors disabled:opacity-50">
-                <Search size={20} />
+          <form onSubmit={handleSearch} className="max-w-4xl mx-auto flex flex-col gap-4 bg-white/30 p-3 rounded-3xl md:rounded-[2.5rem] backdrop-blur-lg border border-white/50 shadow-xl w-full">
+            <div className="flex flex-col md:flex-row items-center gap-3 w-full">
+              {/* Location Input */}
+              <div className="flex items-center bg-white rounded-full px-5 py-3.5 w-full md:w-1/3 shadow-inner border border-gray-100">
+                <MapPin className="w-5 h-5 text-gray-400 shrink-0 mr-2.5" />
+                <input 
+                  type="text" 
+                  placeholder="Lokasyonunuz..." 
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="bg-transparent border-none outline-none w-full text-gray-700 placeholder-gray-400 font-medium text-sm"
+                />
+              </div>
+
+              {/* Search Query Input */}
+              <div className="flex items-center bg-white rounded-full px-5 py-3.5 w-full md:flex-1 shadow-inner border border-gray-100">
+                <Search className="w-5 h-5 text-gray-400 shrink-0 mr-2.5" />
+                <input 
+                  type="text" 
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (e.target.value === '') setSearchResults([]);
+                  }}
+                  placeholder="Yemek veya restoran arayın..." 
+                  className="bg-transparent border-none outline-none w-full text-gray-700 placeholder-gray-400 font-medium text-sm"
+                />
+              </div>
+
+              {/* Search Submit Button */}
+              <button 
+                type="submit" 
+                disabled={isSearching} 
+                className="w-full md:w-auto px-8 py-3.5 rounded-full bg-rose-500 hover:bg-rose-600 text-white font-bold transition-all shadow-md shadow-rose-500/25 disabled:opacity-50 text-sm flex items-center justify-center gap-2"
+              >
+                <Search size={18} />
+                <span>Restoran Bul</span>
               </button>
             </div>
-            <div className="flex items-center gap-3 w-full md:w-auto">
+            
+            {/* Quick Actions (Rezervasyon & Hızlı Sipariş) */}
+            <div className="flex items-center justify-center gap-3 w-full md:w-auto md:self-end mt-1 md:mt-0">
               <ReservationSection />
               <OnlineOrderForm />
             </div>

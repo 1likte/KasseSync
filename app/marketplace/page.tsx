@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Star, Clock, Sparkles, Filter, X, ArrowLeft, ShoppingCart } from 'lucide-react';
+import { MapPin, Star, Clock, Sparkles, Filter, X, ArrowLeft } from 'lucide-react';
+import MarketplaceHeader from '@/components/landing/MarketplaceHeader';
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -102,30 +103,7 @@ export default async function MarketplacePage(props: {
       <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-[#FF9A9E] rounded-full mix-blend-overlay filter blur-[100px] opacity-60 pointer-events-none translate-x-1/3 translate-y-1/3"></div>
 
       {/* Glassmorphic Sticky Header */}
-      <header className="bg-white/10 backdrop-blur-xl border-b border-white/20 sticky top-0 z-50 shadow-lg w-full px-6 sm:px-10 lg:px-16 py-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <Link href="/" className="block">
-          <Image 
-            src="/logo.png" 
-            alt="GastroSync Logo" 
-            width={400} 
-            height={130} 
-            className="object-contain drop-shadow-md h-auto w-auto max-h-32 scale-110 origin-left cursor-pointer"
-            priority
-          />
-        </Link>
-        <div className="flex items-center gap-3">
-          <Link href="/login" className="px-6 py-2.5 rounded-full bg-white/20 hover:bg-white/30 text-white font-bold backdrop-blur-md border border-white/30 transition-all text-sm shadow-sm">
-            İşletme Girişi
-          </Link>
-          <button className="relative p-2.5 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-md border border-white/30 transition-all group shadow-sm ml-2">
-            <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 text-[10px] items-center justify-center font-bold text-white shadow-sm border border-white/20">2</span>
-            </span>
-          </button>
-        </div>
-      </header>
+      <MarketplaceHeader />
 
       {/* Main Container */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-40 flex flex-col">
