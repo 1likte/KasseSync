@@ -1,14 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-// We use service role key because this is a server action that needs to insert records
-// bypassing RLS since users might not be authenticated
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
 export async function POST(req: Request) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    return NextResponse.json({ error: 'Supabase configuration is missing' }, { status: 503 });
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
   try {
     const body = await req.json();
     const { restaurantId, items, customerDetails } = body;

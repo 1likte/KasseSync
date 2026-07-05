@@ -1,11 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    return NextResponse.json({ success: false, error: 'Supabase configuration is missing' }, { status: 503 });
+  }
+  
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
   try {
     const { id } = await params;
     const body = await req.json();
