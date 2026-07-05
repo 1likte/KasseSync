@@ -50,7 +50,9 @@ export default async function MarketplacePage(props: {
         address: 'Merkez Mah. Lezzet Sok. No:1',
         delivery_fee: 0,
         minimum_order: 150,
-        banner_image_url: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=800&auto=format&fit=crop'
+        banner_image_url: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=800&auto=format&fit=crop',
+        cuisine_type: 'Burger, Fast Food',
+        description: 'En lezzetli gurme burgerler'
       },
       {
         id: 'mock-2',
@@ -59,7 +61,9 @@ export default async function MarketplacePage(props: {
         address: 'Sahil Yolu Cad. No:45',
         delivery_fee: 20,
         minimum_order: 200,
-        banner_image_url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800&auto=format&fit=crop'
+        banner_image_url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800&auto=format&fit=crop',
+        cuisine_type: 'Pizza, İtalyan',
+        description: 'Taş fırında gerçek İtalyan pizzası'
       },
       {
         id: 'mock-3',
@@ -68,7 +72,9 @@ export default async function MarketplacePage(props: {
         address: 'Meydan Sok. No:12',
         delivery_fee: 15,
         minimum_order: 250,
-        banner_image_url: 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=800&auto=format&fit=crop'
+        banner_image_url: 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=800&auto=format&fit=crop',
+        cuisine_type: 'Kebap, Türk Mutfağı',
+        description: 'Geleneksel lezzetler ve zengin mezeler'
       }
     ];
 
