@@ -2,10 +2,6 @@ import { createClient } from '@supabase/supabase-js';
 import { notFound } from 'next/navigation';
 import ProductCard from '@/components/storefront/ProductCard';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export const revalidate = 60;
 
 export default async function StoreCategoryPage({
@@ -14,6 +10,15 @@ export default async function StoreCategoryPage({
   params: Promise<{ slug: string; categoryId: string }>;
 }) {
   const { slug, categoryId } = await params;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+  if (!supabaseUrl || !supabaseKey) {
+    return notFound();
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   // Fetch restaurant
   const { data: restaurant } = await supabase

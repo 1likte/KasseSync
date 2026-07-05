@@ -6,10 +6,6 @@ import CartSidebar from '@/components/storefront/CartSidebar';
 import { StoreCartProvider } from '@/lib/contexts/StoreCartContext';
 import { ReactNode } from 'react';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export const revalidate = 60;
 
 export default async function StoreLayout({
@@ -20,6 +16,15 @@ export default async function StoreLayout({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+  if (!supabaseUrl || !supabaseKey) {
+    return notFound();
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   // Fetch restaurant
   const { data: restaurant } = await supabase

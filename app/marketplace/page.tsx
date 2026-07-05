@@ -5,22 +5,22 @@ import { MapPin, Star, Clock, Sparkles, Filter, X, ArrowLeft, ShoppingCart } fro
 
 export const revalidate = 60; // Revalidate every minute
 
-// We use the service role or a standard client to fetch active marketplace restaurants
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export default async function MarketplacePage(props: {
   searchParams: Promise<{ q?: string; location?: string; [key: string]: string | string[] | undefined }>
 }) {
   const { q = '', location = '' } = await props.searchParams;
   let restaurants = null;
   
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
   try {
-    let query = supabase
-      .from('restaurants')
-      .select('id, name, slug, address, delivery_fee, minimum_order, banner_image_url, cuisine_type, description')
-      .eq('is_marketplace_active', true);
+    if (supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      let query = supabase
+        .from('restaurants')
+        .select('id, name, slug, address, delivery_fee, minimum_order, banner_image_url, cuisine_type, description')
+        .eq('is_marketplace_active', true);
 
     if (q) {
       query = query.or(`name.ilike.%${q}%,cuisine_type.ilike.%${q}%,description.ilike.%${q}%`);
@@ -31,10 +31,11 @@ export default async function MarketplacePage(props: {
 
     const { data, error } = await query;
 
-    if (error) {
-      console.warn('Supabase fetch failed (project might be paused). Falling back to mock data.');
-    } else {
-      restaurants = data;
+      if (error) {
+        console.warn('Supabase fetch failed (project might be paused). Falling back to mock data.');
+      } else {
+        restaurants = data;
+      }
     }
   } catch (err) {
     console.warn('Network error fetching from Supabase. Falling back to mock data.');
