@@ -72,7 +72,7 @@ export default function GastroSyncLandingPage() {
             alt="GastroSync Logo" 
             width={240} 
             height={78} 
-            className="object-contain drop-shadow-md h-12 w-auto"
+            className="object-contain drop-shadow-md h-16 md:h-20 w-auto"
             priority
           />
         </Link>
@@ -230,24 +230,25 @@ export default function GastroSyncLandingPage() {
             Acıktın mı? En sevdiğin yemekler kapında!
           </h1>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="max-w-4xl mx-auto flex flex-col gap-4 bg-white/30 p-3 rounded-3xl md:rounded-[2.5rem] backdrop-blur-lg border border-white/50 shadow-xl w-full">
-            <div className="flex flex-col md:flex-row items-center gap-3 w-full">
+          {/* Search Area Container */}
+          <div className="max-w-4xl mx-auto w-full flex flex-col gap-6 items-center">
+            {/* Main Search Form */}
+            <form onSubmit={handleSearch} className="w-full bg-white p-2 md:p-3 rounded-[2rem] md:rounded-full shadow-2xl flex flex-col md:flex-row items-center gap-2 border border-white/60">
               {/* Location Input */}
-              <div className="flex items-center bg-white rounded-full px-5 py-3.5 w-full md:w-1/3 shadow-inner border border-gray-100">
-                <MapPin className="w-5 h-5 text-gray-400 shrink-0 mr-2.5" />
+              <div className="flex items-center w-full md:w-1/3 px-4 py-3 md:py-2 md:border-r border-gray-100">
+                <MapPin className="w-5 h-5 text-rose-500 shrink-0 mr-3" />
                 <input 
                   type="text" 
                   placeholder="Lokasyonunuz..." 
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="bg-transparent border-none outline-none w-full text-gray-700 placeholder-gray-400 font-medium text-sm"
+                  className="bg-transparent border-none outline-none w-full text-gray-700 placeholder-gray-400 font-medium text-base"
                 />
               </div>
 
               {/* Search Query Input */}
-              <div className="flex items-center bg-white rounded-full px-5 py-3.5 w-full md:flex-1 shadow-inner border border-gray-100">
-                <Search className="w-5 h-5 text-gray-400 shrink-0 mr-2.5" />
+              <div className="flex items-center flex-1 w-full px-4 py-3 md:py-2 border-t md:border-t-0 border-gray-100">
+                <Search className="w-5 h-5 text-rose-500 shrink-0 mr-3" />
                 <input 
                   type="text" 
                   value={searchQuery}
@@ -256,7 +257,7 @@ export default function GastroSyncLandingPage() {
                     if (e.target.value === '') setSearchResults([]);
                   }}
                   placeholder="Yemek veya restoran arayın..." 
-                  className="bg-transparent border-none outline-none w-full text-gray-700 placeholder-gray-400 font-medium text-sm"
+                  className="bg-transparent border-none outline-none w-full text-gray-700 placeholder-gray-400 font-medium text-base"
                 />
               </div>
 
@@ -264,19 +265,19 @@ export default function GastroSyncLandingPage() {
               <button 
                 type="submit" 
                 disabled={isSearching} 
-                className="w-full md:w-auto px-8 py-3.5 rounded-full bg-rose-500 hover:bg-rose-600 text-white font-bold transition-all shadow-md shadow-rose-500/25 disabled:opacity-50 text-sm flex items-center justify-center gap-2"
+                className="w-full md:w-auto px-8 py-3.5 md:py-4 rounded-full bg-rose-500 hover:bg-rose-600 text-white font-bold transition-all shadow-md shadow-rose-500/25 disabled:opacity-50 text-base flex items-center justify-center gap-2 shrink-0 mt-2 md:mt-0"
               >
-                <Search size={18} />
+                <Search size={20} />
                 <span>Restoran Bul</span>
               </button>
-            </div>
-            
+            </form>
+
             {/* Quick Actions (Rezervasyon & Hızlı Sipariş) */}
-            <div className="flex items-center justify-center gap-3 w-full md:w-auto md:self-end mt-1 md:mt-0">
+            <div className="flex flex-wrap items-center justify-center gap-4 w-full">
               <ReservationSection />
               <OnlineOrderForm />
             </div>
-          </form>
+          </div>
         </div>
 
         {/* Search Results or Default Sections */}
